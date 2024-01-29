@@ -435,6 +435,11 @@ public class IconModel
             mStandardIcons.add(defaultIcon);
             mStandardIcons.setDefaultIcon(defaultIcon.getName());
 
+            mStandardIcons.add(new Icon("Black", "images/black_circle.png"));
+            mStandardIcons.add(new Icon("Black (Unfilled)", "images/black_unfilled_circle.png"));
+            mStandardIcons.add(new Icon("Blue", "images/blue_circle.png"));
+            mStandardIcons.add(new Icon("Green", "images/green_circle.png"));
+            mStandardIcons.add(new Icon("Red", "images/red_circle.png"));
             mStandardIcons.add(new Icon("Ambulance", "images/ambulance.png"));
             mStandardIcons.add(new Icon("Block Truck", "images/concrete_block_truck.png"));
             mStandardIcons.add(new Icon("CWID", "images/cwid.png"));

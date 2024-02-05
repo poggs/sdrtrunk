@@ -65,6 +65,7 @@ public class UserPreferences implements Listener<PreferenceType>
     private MP3Preference mMP3Preference;
     private PlaybackPreference mPlaybackPreference;
     private PlaylistPreference mPlaylistPreference;
+    private PubSubMessagingPreference mPubSubMessagingPreference;
     private RadioReferencePreference mRadioReferencePreference;
     private RecordPreference mRecordPreference;
     private TalkgroupFormatPreference mTalkgroupFormatPreference;
@@ -157,6 +158,11 @@ public class UserPreferences implements Listener<PreferenceType>
     }
 
     /**
+     * Pub/Sub preferences
+     */
+    public PubSubMessagingPreference getPubSubPreference() { return mPubSubMessagingPreference; }
+
+    /**
      * Radio reference web services preferences
      */
     public RadioReferencePreference getRadioReferencePreference()
@@ -227,6 +233,7 @@ public class UserPreferences implements Listener<PreferenceType>
         mMP3Preference = new MP3Preference(this::receive);
         mPlaybackPreference = new PlaybackPreference(this::receive);
         mPlaylistPreference = new PlaylistPreference(this::receive, mDirectoryPreference);
+        mPubSubMessagingPreference = new PubSubMessagingPreference(this::receive);
         mRadioReferencePreference = new RadioReferencePreference(this::receive);
         mRecordPreference = new RecordPreference(this::receive);
         mTalkgroupFormatPreference = new TalkgroupFormatPreference(this::receive);

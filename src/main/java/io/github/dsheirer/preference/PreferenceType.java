@@ -34,6 +34,7 @@ public enum PreferenceType
     MULTI_FREQUENCY,
     PLAYLIST,
     PLAYBACK,
+    PUB_SUB_MESSAGING,
     RADIO_REFERENCE,
     RECORD,
     TALKGROUP_FORMAT,

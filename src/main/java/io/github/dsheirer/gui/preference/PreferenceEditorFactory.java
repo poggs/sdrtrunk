@@ -25,6 +25,7 @@ import io.github.dsheirer.gui.preference.call.CallManagementPreferenceEditor;
 import io.github.dsheirer.gui.preference.decoder.JmbeLibraryPreferenceEditor;
 import io.github.dsheirer.gui.preference.directory.DirectoryPreferenceEditor;
 import io.github.dsheirer.gui.preference.mp3.MP3PreferenceEditor;
+import io.github.dsheirer.gui.preference.pubsubmessaging.PubSubMessagingPreferenceEditor;
 import io.github.dsheirer.gui.preference.playback.PlaybackPreferenceEditor;
 import io.github.dsheirer.gui.preference.record.RecordPreferenceEditor;
 import io.github.dsheirer.gui.preference.tuner.TunerPreferenceEditor;
@@ -62,6 +63,8 @@ public class PreferenceEditorFactory
                 return new TalkgroupFormatPreferenceEditor(userPreferences);
             case VECTOR_CALIBRATION:
                 return new VectorCalibrationPreferenceEditor(userPreferences);
+            case PUBSUB_MESSAGING_SERVER:
+                return new PubSubMessagingPreferenceEditor(userPreferences);
         }
 
         return null;

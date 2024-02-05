@@ -194,6 +194,11 @@ public class UserPreferencesEditor extends BorderPane
             treeRoot.getChildren().add(displayItem);
             displayItem.setExpanded(true);
 
+            TreeItem<String> pubSubMessagingItem = new TreeItem<>("Pub/Sub Messaging");
+            pubSubMessagingItem.getChildren().add(new TreeItem(PreferenceEditorType.PUBSUB_MESSAGING_SERVER));
+            treeRoot.getChildren().add(pubSubMessagingItem);
+            pubSubMessagingItem.setExpanded(true);
+
             TreeItem<String> storageItem = new TreeItem<>("File Storage");
             storageItem.getChildren().add(new TreeItem(PreferenceEditorType.DIRECTORY));
             treeRoot.getChildren().add(storageItem);

@@ -382,8 +382,10 @@ public class ChannelProcessingManager implements Listener<ChannelEvent>
 
         try
         {
+            String threadName = "sdrtrunk channel [" + channel.getChannelID() + "/" +
+                    channel.getDecodeConfiguration().getDecoderType().getShortDisplayString() + "]";
             source = mTunerManager.getSource(channel.getSourceConfiguration(),
-                channel.getDecodeConfiguration().getChannelSpecification());
+                channel.getDecodeConfiguration().getChannelSpecification(), threadName);
         }
         catch(SourceException se)
         {
@@ -636,6 +638,8 @@ public class ChannelProcessingManager implements Listener<ChannelEvent>
                 processingChain.removeFrequencyChangeListener(channel);
                 channel.resetFrequencyCorrection();
 
+                //Notify all processing chains that this channel is shutting down so that if this is a traffic channel,
+                //the owning parent channel's traffic channel manager can cleanup it's accounting.
                 mChannelEventBroadcaster.broadcast(new ChannelEvent(channel, ChannelEvent.Event.NOTIFICATION_PROCESSING_STOP));
                 mChannelEventBroadcaster.removeListener(processingChain);
 

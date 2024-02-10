@@ -39,6 +39,7 @@ import io.github.dsheirer.identifier.talkgroup.TalkgroupIdentifier;
 import io.github.dsheirer.log.LoggingSuppressor;
 import io.github.dsheirer.message.IMessage;
 import io.github.dsheirer.module.decode.DecoderType;
+import io.github.dsheirer.module.decode.dmr.channel.DMRAbsoluteChannel;
 import io.github.dsheirer.module.decode.dmr.channel.DMRChannel;
 import io.github.dsheirer.module.decode.dmr.channel.DMRLsn;
 import io.github.dsheirer.module.decode.dmr.event.DMRDecodeEvent;
@@ -46,6 +47,7 @@ import io.github.dsheirer.module.decode.dmr.identifier.DMRTalkgroup;
 import io.github.dsheirer.module.decode.dmr.message.DMRMessage;
 import io.github.dsheirer.module.decode.dmr.message.data.DataMessage;
 import io.github.dsheirer.module.decode.dmr.message.data.csbk.CSBKMessage;
+import io.github.dsheirer.module.decode.dmr.message.data.csbk.UnknownCSBKMessage;
 import io.github.dsheirer.module.decode.dmr.message.data.csbk.hytera.HyteraTrafficChannelTalkerStatus;
 import io.github.dsheirer.module.decode.dmr.message.data.csbk.motorola.CapacityMaxAdvantageModeVoiceChannelUpdate;
 import io.github.dsheirer.module.decode.dmr.message.data.csbk.motorola.CapacityMaxAloha;
@@ -644,6 +646,10 @@ public class DMRDecoderState extends TimeslotDecoderState
                 closeCurrentCallEvent(message.getTimestamp());
                 getIdentifierCollection().remove(IdentifierClass.USER);
                 broadcast(new DecoderStateEvent(this, Event.CONTINUATION, State.ACTIVE, getTimeslot()));
+                if(mNetworkConfigurationMonitor != null)
+                {
+                    mNetworkConfigurationMonitor.process(message);
+                }
                 break;
             case TLC:
                 if(message instanceof Terminator)
@@ -886,7 +892,12 @@ public class DMRDecoderState extends TimeslotDecoderState
                 }
                 else
                 {
-                    mLog.error("Unrecognized DMR channel grant CSBK ignored: " + csbk.getClass());
+                    //Log when a CSBK that is not the Unknown CSBK is processed, to detect when new opcodes are added
+                    //that are not ChannelGrant subclass implementations.
+                    if(!(csbk instanceof UnknownCSBKMessage))
+                    {
+                        mLog.error("Unrecognized DMR channel grant CSBK ignored: " + csbk.getClass());
+                    }
                 }
                 break;
             case MOTOROLA_CAPMAX_ALOHA:
@@ -1388,6 +1399,12 @@ public class DMRDecoderState extends TimeslotDecoderState
     {
         Event event = (mCurrentCallEvent == null ? Event.START : Event.CONTINUATION);
 
+        //Create a repeater channel descriptor if we don't have one
+        if(mCurrentChannel == null && mCurrentFrequency > 0)
+        {
+            mCurrentChannel = new DMRAbsoluteChannel(getTimeslot(), getTimeslot(), mCurrentFrequency, 0);
+        }
+
         if(mCurrentCallEvent == null)
         {
             mCurrentCallEvent = DMRDecodeEvent.builder(type, timestamp)
@@ -1435,6 +1452,7 @@ public class DMRDecoderState extends TimeslotDecoderState
         }
 
         getIdentifierCollection().remove(IdentifierClass.USER, Form.TALKER_ALIAS, Role.FROM);
+        getIdentifierCollection().remove(IdentifierClass.USER, Form.TONE, Role.FROM);
     }
 
     @Override
@@ -1472,6 +1490,8 @@ public class DMRDecoderState extends TimeslotDecoderState
     @Override
     public void start()
     {
+        super.start();
+
         //Change the default (45-second) traffic channel timeout to 1 second
         if(mChannel.isTrafficChannel())
         {
@@ -1481,11 +1501,6 @@ public class DMRDecoderState extends TimeslotDecoderState
 
     @Override
     public void init()
-    {
-    }
-
-    @Override
-    public void stop()
     {
     }
 }

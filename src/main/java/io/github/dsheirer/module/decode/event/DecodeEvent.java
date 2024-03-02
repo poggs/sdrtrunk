@@ -24,6 +24,9 @@ import io.github.dsheirer.channel.IChannelDescriptor;
 import io.github.dsheirer.identifier.IdentifierCollection;
 import io.github.dsheirer.protocol.Protocol;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Decode event implementation.  A decode event is a discrete event such as a call or text message
  * or radio registration.
@@ -38,6 +41,7 @@ public class DecodeEvent implements IDecodeEvent
     private String mDetails;
     private Protocol mProtocol;
     private int mTimeslot = -1;
+    private Map<String, String> mAdditionalData;
 
     /**
      * Constructs an instance
@@ -48,6 +52,7 @@ public class DecodeEvent implements IDecodeEvent
     {
         mDecodeEventType = decodeEventType;
         mTimeStart = start;
+        mAdditionalData = new HashMap<>();
     }
 
     /**
@@ -224,6 +229,21 @@ public class DecodeEvent implements IDecodeEvent
     public void setTimeslot(int timeslot)
     {
         mTimeslot = timeslot;
+    }
+
+    @Override
+    public boolean hasAdditionalData() {
+        return !mAdditionalData.isEmpty();
+    }
+
+    @Override
+    public void setAdditionalData(Map<String, String> mAdditionalData) {
+        this.mAdditionalData = mAdditionalData;
+    }
+
+    @Override
+    public void addAdditionalData(String key, String value) {
+        this.mAdditionalData.put(key, value);
     }
 
     @Override

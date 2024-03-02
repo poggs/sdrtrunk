@@ -23,11 +23,12 @@ import io.github.dsheirer.channel.IChannelDescriptor;
 import io.github.dsheirer.identifier.IdentifierCollection;
 import io.github.dsheirer.protocol.Protocol;
 
+import java.util.Map;
+
 /**
  * Decode event interface
  */
-public interface IDecodeEvent
-{
+public interface IDecodeEvent {
     /**
      * Event start time
      *
@@ -87,4 +88,20 @@ public interface IDecodeEvent
      * Indicates if the event has a timeslot specified
      */
     boolean hasTimeslot();
+
+    /**
+     * Indicates if the event has additional logging data available
+     */
+    boolean hasAdditionalData();
+
+    /**
+     * Set additional logging data from a Map
+     */
+    void setAdditionalData(Map<String, String> mAdditionalData);
+
+    /**
+     * Set an individual element of logging data
+     */
+    void addAdditionalData(String key, String value);
+
 }
